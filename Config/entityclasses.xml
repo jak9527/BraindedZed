@@ -1,0 +1,14 @@
+<configs>
+
+	<set xpath="/entity_classes/entity_class[contains(@name, 'zombie')]/property[@name='AITarget']/@value">
+		SetAsTargetIfHurt class=EntityPlayer,EntityBandit,EntityEnemyAnimal|
+		SetNearestCorpseAsTarget flags=edible|
+		SetNearestEntityAsTarget class=EntityPlayer,0,30,EntityBandit,0,0|
+	</set>
+
+	<set xpath="/entity_classes/entity_class[contains(@name, 'zombie') and not(@name='zombieUtilityWorker') and not(@name='zombieDemolition')]/property[@name='AIPathCostScale']/@value">0.0,0.1</set>
+
+	<append xpath="/entity_classes/entity_class[@name='zombieDemolition']">
+		<property name="AIPathCostScale" value=".9, 1"/>
+	</append>
+</configs>
