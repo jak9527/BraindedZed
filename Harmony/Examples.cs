@@ -2,14 +2,42 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using Audio;
 using HarmonyLib;
+using HarmonyLib.Tools;
 using UnityEngine;
+using static JBooth.MicroSplat.MicroSplatProceduralTextureUtil;
 
 namespace SampleProject.Harmony
 {
+    [HarmonyPatch(typeof(AstarVoxelGrid))]
+    [HarmonyPatch(nameof(AstarVoxelGrid.RecalculateCell))]
+    public static class AstarVoxelGrid_RecalculateCell_Patch
+    {
+        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            var codes = new List<CodeInstruction>(instructions);
+            for (var i = 0; i < codes.Count; i++)
+            {
+                if (codes[i].opcode == OpCodes.Ldfld)
+                {
+                    //Console.WriteLine(codes[i].operand);
+                    if (codes[i].operand.ToString().Equals("System.Int32 damage"))
+                    {
+                        codes.RemoveAt(i-1);
+                        i--;
+                        codes[i].opcode = OpCodes.Ldc_I4_S;
+                        codes[i].operand = 0;
+                    }
+                }
+            }
+            return codes;
+        }
+    }
+
     //[HarmonyPatch(typeof(XUiC_MainMenu))]
     //[HarmonyPatch("OnOpen")]
     //public class SampleProjectPrefix
@@ -40,7 +68,7 @@ namespace SampleProject.Harmony
     //    }
     //}
 
-  
+
     //// If there's overloaded methods, you need to specify the parameter list. Here's one for Client.Play(), which is overloaded.
     //[HarmonyPatch(typeof(Client))]
     //[HarmonyPatch("Play")]
