@@ -24,7 +24,6 @@ namespace SampleProject.Harmony
             {
                 if (codes[i].opcode == OpCodes.Ldfld)
                 {
-                    //Console.WriteLine(codes[i].operand);
                     if (codes[i].operand.ToString().Equals("System.Int32 damage"))
                     {
                         codes.RemoveAt(i-1);
